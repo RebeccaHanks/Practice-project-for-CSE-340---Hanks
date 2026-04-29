@@ -1,0 +1,48 @@
+:root {
+    /* Core colors */
+    --bg-color: lightblue;
+    --text-color: #333;
+    --link-color: #333;
+    --link-hover-color: #0066cc;
+
+    /* Add more variables below */
+    /* --primary-color: #000; */
+    /* --secondary-color: #fff; */
+}
+
+
+html, body {
+    background-color: var(--bg-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+body {
+    nav {
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            display: inline;
+            margin-right: 15px;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+
+            &:hover {
+                color: var(--link-hover-color);
+            }
+        }
+    }
+    .aboutImage {
+        width:auto;
+        height:300px;
+        border: 2px solid black;
+    }
+}
