@@ -1,9 +1,9 @@
-import { getFacultyById , getSortedFaculty } from '../../models/faculty/faculty.js';
+import { getFacultyBySlug, getSortedFaculty } from '../../models/faculty/faculty.js';
 
-// Route handler 
-const facultyListPage = (req, res) => {
+// Route handler
+const facultyListPage = async (req, res) => {
     const sortBy = req.query?.sort || 'name';
-    const faculty = getSortedFaculty(sortBy);
+    const faculty = await getSortedFaculty(sortBy);
 
     res.render('faculty/list', {
         title: 'Faculty Directory',
@@ -12,21 +12,18 @@ const facultyListPage = (req, res) => {
     });
 };
 
-// Route handler 
-const facultyDetailPage = (req, res, next) => {
-    const facultyId = req.params.facultyId;
-    const facultyMember = getFacultyById(facultyId);
+// Route handler
+const facultyDetailPage = async (req, res, next) => {
+    const facultySlug = req.params.slugId;
+
+    const facultyMember = await getFacultyBySlug(facultySlug);
 
     // If faculty member doesn't exist, create 404 error
-    if (!facultyMember) {
-        const err = new Error(`Faculty member ${facultyId} not found`);
+    if (Object.keys(facultyMember).length === 0) {
+        const err = new Error(`Faculty member ${facultySlug} not found`);
         err.status = 404;
         return next(err);
     }
-
-    // Handle sorting if requested
-    // const sortBy = req.query.sort || 'time';
-    // const sortedSections = getSortedSections(course.sections, sortBy);
 
     res.render('faculty/detail', {
         title: facultyMember.name,

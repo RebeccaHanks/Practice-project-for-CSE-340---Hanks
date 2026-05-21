@@ -14,12 +14,10 @@ router.get('/about', aboutPage);
 
 // Course catalog routes
 router.get('/catalog', catalogPage);
-router.get('/catalog/:courseId', courseDetailPage);
-
+router.get('/catalog/:slugId', courseDetailPage);
 //Faculty list routes
 router.get('/faculty', facultyListPage);
-router.get('/faculty/:facultyId', facultyDetailPage);
-
+router.get('/faculty/:slugId', facultyDetailPage);
 // Demo page with special middleware
 router.get('/demo', addDemoHeaders, demoPage);
 

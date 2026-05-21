@@ -2,7 +2,8 @@
   "name": "practice-project-for-cse-340---hanks",
   "dependencies": {
     "ejs": "^5.0.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.21.0"
   },
   "type": "module",
   "scripts": {
