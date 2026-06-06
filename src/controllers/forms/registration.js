@@ -11,26 +11,47 @@ const router = Router();
 const registrationValidation = [
     body('name')
         .trim()
-        .isLength({ min: 2 })
-        .withMessage('Name must be at least 2 characters'),
+        .isLength({ min: 2, max: 100 })
+        .withMessage('Name must be between 2 and 100 characters')
+        .matches(/^[a-zA-Z\s'-]+$/)
+        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
+
     body('email')
         .trim()
         .isEmail()
+        .withMessage('Please enter a valid email address')
         .normalizeEmail()
-        .withMessage('Must be a valid email address'),
+        .isLength({ max: 255 })
+        .withMessage('Email address is too long'),
+
     body('emailConfirm')
         .trim()
-        .custom((value, { req }) => value === req.body.email)
-        .withMessage('Email addresses must match'),
+        .custom((value, { req }) => {
+            if (value !== req.body.email) {
+                throw new Error('Email addresses do not match');
+            }
+            return true;
+        }),
+
     body('password')
-        .isLength({ min: 8 })
+        .isLength({ min: 8, max: 128 })
+        .withMessage('Password must be between 8 and 128 characters')
         .matches(/[0-9]/)
         .withMessage('Password must contain at least one number')
-        .matches(/[!@#$%^&*]/)
+        .matches(/[a-z]/)
+        .withMessage('Password must contain at least one lowercase letter')
+        .matches(/[A-Z]/)
+        .withMessage('Password must contain at least one uppercase letter')
+        .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)
         .withMessage('Password must contain at least one special character'),
+
     body('passwordConfirm')
-        .custom((value, { req }) => value === req.body.password)
-        .withMessage('Passwords must match')
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error('Passwords do not match');
+            }
+            return true;
+        })
 ];
 
 /**
@@ -52,11 +73,11 @@ const processRegistration = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        // TODO: Log validation errors to console for debugging
-        console.error('Validation errors:', errors.array());
-        // TODO: Redirect back to /register
-        return res.redirect('/register');
+        errors.array().forEach(error => {
+            req.flash('error', error.msg);
+        });
 
+        return res.redirect('/register');
     }
 
     // Extract validated data from request body
@@ -65,33 +86,31 @@ const processRegistration = async (req, res) => {
 
     try {
         // Check if email already exists in database
-        // TODO: Call emailExists(email) and store the result in a variable
         const existingEmail = await emailExists(email);
+
         if (existingEmail) {
-            console.log('Email already registered');
-            // TODO: Redirect back to /register
+            req.flash('warning', 'An account with that email already exists.');
             return res.redirect('/register');
         }
 
         // Hash the password before saving to database
-        // TODO: Use bcrypt.hash(password, 10) to hash the password
-        // TODO: Store the result in a variable called hashedPassword
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Save user to database with hashed password
-        // TODO: Call saveUser(name, email, hashedPassword)
         await saveUser(name, email, hashedPassword);
 
-        // TODO: Log success message to console
-        console.log('user registered successfully');
-        // TODO: Redirect to /register/list to show successful registration
-        return res.redirect('/register/list');
-        // NOTE: Later when we add authentication, we'll change this to require login first
+        // Success message
+        req.flash('success', 'Registration complete! You can now log in.');
+
+        // Redirect to login page
+        return res.redirect('/login');
+
     } catch (error) {
-        // TODO: Log the error to console
-        console.error('Error registering user', error);
-        // TODO: Redirect back to /register
-        res.redirect('/register');
+        console.error('Error registering user:', error);
+
+        req.flash('error', 'Unable to register. Please try again later.');
+
+        return res.redirect('/register');
     }
 };
 

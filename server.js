@@ -14,6 +14,8 @@ import { setupDatabase, testConnection } from './src/models/setup.js';
 import routes from './src/controllers/routes.js';
 import { addLocalVariables } from './src/middleware/global.js';
 
+import flash from './src/middleware/flash.js';
+
 /**
  * Server configuration
  */
@@ -70,6 +72,9 @@ app.set('views', path.join(__dirname, 'src/views'));
 /**
  * Global Middleware
  */
+// Flash message middleware (must come after session and global middleware)
+app.use(flash);
+
 app.use(addLocalVariables);
 
 /**
