@@ -59,6 +59,8 @@ const processLogin = async (req, res) => {
         // TODO: Find user by email using findUserByEmail()
         const user = await findUserByEmail(email);
 
+        // console.log('USER FROM DATABASE:', user);
+
         // TODO: If not found, log "User not found" and redirect to /login
         if (!user) {
             console.log('User not found');
