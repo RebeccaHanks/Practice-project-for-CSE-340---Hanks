@@ -32,6 +32,9 @@ const app = express();
 // Initialize PostgreSQL session store
 const pgSession = connectPgSimple(session);
 
+console.log('SESSION_SECRET exists:', !!process.env.SESSION_SECRET);
+
+
 // Configure session middleware
 app.use(session({
     store: new pgSession({
