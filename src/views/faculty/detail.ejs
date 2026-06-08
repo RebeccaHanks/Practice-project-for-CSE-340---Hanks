@@ -2,6 +2,11 @@
 
 <main>
     <div class="faculty-profile">
+        <img
+            class="faculty-detail-photo"
+            src="/images/faculty/<%= faculty.slug %>.jpg"
+            alt="Photo of <%= faculty.name %>"
+        >
         <h1><%= faculty.name %></h1>
         <p class="faculty-title"><%= faculty.title %></p>
         <p class="faculty-department"><%= faculty.department %> Department</p>

@@ -33,15 +33,21 @@
 
 .faculty-list {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
+    justify-items: center;
+    /* padding-top: 30px; */
 
     .faculty-card {
+        width: 100%;
+        max-width: 260px;
+        text-align: center;
+        padding: 1rem;
         border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 1.5rem;
-        background: #fff;
+        border-radius: 10px;
+        background-color: white;
         transition: box-shadow 0.2s ease;
 
         &:hover {
@@ -66,6 +72,17 @@
             font-weight: 500;
             margin: 0;
         }
+    }
+}
+@media (max-width: 900px) {
+    .faculty-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .faculty-list {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -131,4 +148,36 @@
             }
         }
     }
+}
+
+
+.faculty-card {
+    position: relative;
+    max-width: 250px;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.faculty-photo {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: url('https://placehold.co/480') center / cover no-repeat;
+}
+
+.faculty-detail-photo {
+    max-width: 250px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    background: url('https://placehold.co/480') center / cover no-repeat;
 }
